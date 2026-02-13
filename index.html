@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Be My Valentine 💕</title>
+    <link rel="stylesheet" href="css/valentine.css" />
+  </head>
+  <body>
+    <div class="floating-hearts">
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+    </div>
+
+    <div class="container">
+      <div id="valentineQuestion" class="pulse">
+        <b>Will You Be My Valentine? 💕</b>
+      </div>
+      <p class="subtitle">You mean the world to me ✨</p>
+      
+      <div class="button-container">
+        <button class="answerButton yes-button" onclick="location.href='thankyou.html'">
+          Yes ♡
+        </button>
+        <button class="answerButton no-button" id="noButton">I'm Not Sure Yet... 🥺</button>
+      </div>
+      
+      <div class="gif-container">
+        <img src="cat.gif" alt="cat asking question" class="responsive" />
+      </div>
+    </div>
+
+    <script>
+      const noButton = document.getElementById('noButton');
+      const yesButton = document.querySelector('.yes-button');
+      let clickCount = 0;
+      const messages = [
+        "I'm Not Sure Yet... 🥺",
+        "Are You Sure? 🥺",
+        "Really? 💔",
+        "Please? 🙏",
+        "Pretty Please? 🥹",
+        "Just Say Yes! 💕"
+      ];
+      
+      noButton.addEventListener('click', function() {
+        clickCount++;
+        
+        // Change button text
+        if (clickCount < messages.length) {
+          noButton.textContent = messages[clickCount];
+        }
+        
+        // Grow Yes button
+        var currentFontSize = parseInt(window.getComputedStyle(yesButton).fontSize);
+        yesButton.style.fontSize = currentFontSize + 8 + 'px';
+        yesButton.style.padding = (parseInt(window.getComputedStyle(yesButton).padding) + 5) + 'px';
+        
+        // Shrink No button
+        var noFontSize = parseInt(window.getComputedStyle(noButton).fontSize);
+        if (noFontSize > 10) {
+          noButton.style.fontSize = (noFontSize - 2) + 'px';
+        }
+        
+        // After 5 clicks, make No button disappear
+        if (clickCount >= 5) {
+          noButton.style.opacity = '0';
+          noButton.style.transform = 'scale(0)';
+          setTimeout(() => {
+            noButton.style.display = 'none';
+          }, 500);
+        }
+      });
+      
+      // Add entrance animations
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.container').style.animation = 'slideIn 0.8s ease-out';
+      });
+    </script>
+  </body>
+</html>

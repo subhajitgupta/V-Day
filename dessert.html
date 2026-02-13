@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dessert</title>
+    <link rel="stylesheet" href="css/dessert.css" />
+    <link rel="stylesheet" href="css/transitions.css" />
+  </head>
+  <body>
+    <div class="header-container">
+      <div id="dessertquestion">
+        <b>Which Dessert Shall We Share? 💕</b>
+      </div>
+      <div class="selection-counter" id="dessertCounter">0 items selected</div>
+    </div>
+
+    <div class="dessert-selection">
+      <div class="dessert-item">
+        <img src="food/mysorepak.jpeg" alt="mysore pak" />
+        <label
+          ><input type="checkbox" name="dessert" value="Mysore Pak" /> Mysore Pak ♡</label
+        >
+      </div>
+      <div class="dessert-item">
+        <img src="food/cheesecake.jpeg" alt="cheese cake" />
+        <label
+          ><input type="checkbox" name="dessert" value="Cheese Cake" /> Cheese Cake ♡</label
+        >
+      </div>
+      <div class="dessert-item">
+        <img src="food/tiramisu.jpeg" alt="tiramisu" />
+        <label><input type="checkbox" name="dessert" value="Tiramisu" /> Tiramisu ♡</label>
+      </div>
+      <div class="dessert-item">
+        <img src="food/pastry.jpeg" alt="pastry" />
+        <label
+          ><input type="checkbox" name="dessert" value="Pastry" /> Pastry ♡</label
+        >
+      </div>
+      <div class="dessert-item">
+        <img src="food/hotchocolate.jpeg" alt="hot chocolate" />
+        <label
+          ><input type="checkbox" name="dessert" value="Hot Chocolate" />
+          Hot Chocolate ♡</label
+        >
+      </div>
+    </div>
+    <button class="button" onclick="saveAndContinue()">
+      Continue ♡
+    </button>
+
+    <script>
+      // Save selections and continue
+      function saveAndContinue() {
+        const selected = Array.from(document.querySelectorAll('input[name="dessert"]:checked'))
+          .map(cb => '▸ ' + cb.value);
+        localStorage.setItem('selectedDesserts', selected.length > 0 ? selected.join('\n') : 'No desserts selected');
+        location.href = 'activities.html';
+      }
+      
+      // Make images clickable and add visual feedback
+      document.querySelectorAll('.dessert-item').forEach(item => {
+        const img = item.querySelector('img');
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        
+        // Click on image or item container toggles checkbox
+        img.addEventListener('click', function() {
+          checkbox.checked = !checkbox.checked;
+          updateSelection();
+        });
+        
+        // Add visual feedback when checkbox changes
+        checkbox.addEventListener('change', updateSelection);
+      });
+      
+      function updateSelection() {
+        const counter = document.getElementById('dessertCounter');
+        let count = 0;
+        
+        document.querySelectorAll('.dessert-item').forEach(item => {
+          const checkbox = item.querySelector('input[type="checkbox"]');
+          if (checkbox.checked) {
+            item.classList.add('selected');
+            count++;
+          } else {
+            item.classList.remove('selected');
+          }
+        });
+        
+        counter.textContent = count === 0 ? '0 items selected' : count === 1 ? '1 item selected ♥' : `${count} items selected ♥`;
+      }
+    </script>
+    <script src="js/navigation.js"></script>
+    <div class="swipe-indicator">👈 Swipe to navigate 👉</div>
+  </body>
+</html>

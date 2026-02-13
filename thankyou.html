@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thank You, My Love! 💕</title>
+    <link rel="stylesheet" href="css/lastpage.css" />
+  </head>
+  <body>
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <div class="floating-hearts">
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+    </div>
+
+    <div class="container">
+      <div class="celebration-text">
+        <div id="thankyou" class="pulse"><b>Thank You, My Love! 💕</b></div>
+        <p class="subtitle">You've made me the happiest person alive! ✨</p>
+      </div>
+
+      <div class="gif-container">
+        <img id="rizz" src="rizz.gif" alt="celebration" class="responsive" />
+      </div>
+
+      <div class="audio-section">
+        <audio controls autoplay loop>
+          <source src="congratulations.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <div class="message-box">
+        <h2>Don't Leave Yet! 😊</h2>
+        <p>Let's make this moment unforgettable. I've prepared something special for us...</p>
+      </div>
+
+      <button class="continue-button" onclick="location.href='date.html'">
+        Plan Our Perfect Date ♡
+      </button>
+    </div>
+
+    <script>
+      // Create confetti effect
+      function createConfetti() {
+        const container = document.getElementById('confettiContainer');
+        const colors = ['#ff9494', '#ffe3e1', '#ffd4d4', '#ff7b7b', '#ffb6b6'];
+        const shapes = ['♥', '★', '•', '◆', '✦'];
+        
+        for (let i = 0; i < 50; i++) {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.animationDelay = Math.random() * 3 + 's';
+          confetti.style.animationDuration = (Math.random() * 3 + 5) + 's';
+          confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.fontSize = (Math.random() * 20 + 15) + 'px';
+          container.appendChild(confetti);
+        }
+      }
+      
+      // Add entrance animation
+      document.addEventListener('DOMContentLoaded', function() {
+        createConfetti();
+        document.querySelector('.container').style.animation = 'scaleIn 0.8s ease-out';
+      });
+    </script>
+  </body>
+</html>
