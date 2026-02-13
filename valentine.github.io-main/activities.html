@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activities</title>
+    <link rel="stylesheet" href="css/activities.css" />
+    <link rel="stylesheet" href="css/transitions.css" />
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+      // Initialize EmailJS with your Public Key
+      (function(){
+        emailjs.init("fX25SjazbhSPLPp4-"); // Replace with your EmailJS Public Key
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="header-container">
+      <div id="activityquestion">
+        <b>What Adventure Shall We Embark On? 💕</b>
+      </div>
+      <div class="selection-counter" id="activityCounter">0 items selected</div>
+    </div>
+    <div class="activities-selection">
+      <div class="activity-item">
+        <img src="food/cinema.jpeg" alt="cinema" />
+        <label
+          ><input
+            type="checkbox"
+            name="activities"
+            value="Cinema"
+          />Cinema ♡</label
+        >
+      </div>
+      <div class="activity-item">
+        <img src="food/arcade.jpeg" alt="arcade" />
+        <label
+          ><input
+            type="checkbox"
+            name="activities"
+            value="Arcade"
+          />Arcade ♡</label
+        >
+      </div>
+      <div class="activity-item">
+        <img src="food/ecopark.jpeg" alt="eco park walk" />
+        <label
+          ><input
+            type="checkbox"
+            name="activities"
+            value="Eco Park Walk"
+          />Eco Park Walk ♡</label
+        >
+      </div>
+      <div class="activity-item">
+        <img src="food/longdrive.jpeg" alt="long drive" />
+        <label
+          ><input
+            type="checkbox"
+            name="activities"
+            value="Long Drive"
+          />Long Drive ♡</label
+        >
+      </div>
+      <div class="activity-item">
+        <img src="food/southcitymall.jpeg" alt="south city mall" />
+        <label
+          ><input
+            type="checkbox"
+            name="activities"
+            value="South City Mall"
+          />South City Mall ♡</label
+        >
+      </div>
+      <div class="activity-item">
+        <img src="food/doctorschamber.jpeg" alt="doctors chamber" />
+        <label
+          ><input
+            type="checkbox"
+            name="activities"
+            value="Doctors Chamber"
+          />Doctors Chamber 😉</label
+        >
+      </div>
+    </div>
+    <button class="button" onclick="sendEmail()">
+      Finish Planning ♡
+    </button>
+
+    <div class="email-toggle" title="Toggle email sending">
+      <input type="checkbox" id="emailToggle" checked />
+    </div>
+
+    <script>
+      // Collect all selections and send email via SMTP
+      function sendEmail() {
+        // Check if email sending is enabled
+        const emailEnabled = document.getElementById('emailToggle').checked;
+        
+        if (!emailEnabled) {
+          setTimeout(() => {
+            location.href = 'lastpage.html';
+          }, 300);
+          return;
+        }
+        
+        // Show loading state
+        const button = document.querySelector('.button');
+        const originalText = button.textContent;
+        button.textContent = 'Sending... 💌';
+        button.disabled = true;
+        
+        // Get all selected activities
+        const activities = Array.from(document.querySelectorAll('input[name="activities"]:checked'))
+          .map(cb => cb.value);
+        
+        // Get data from localStorage
+        const dateInfo = localStorage.getItem('selectedDate') || 'Not selected';
+        const timeInfo = localStorage.getItem('selectedTime') || 'Not selected';
+        const notes = localStorage.getItem('dateNote') || 'No notes added';
+        const loveLetter = localStorage.getItem('loveLetter') || '';
+        const uploadedPhoto = localStorage.getItem('uploadedPhoto') || '';
+        const foodItems = localStorage.getItem('selectedFood') || 'No food selected';
+        const dessertItems = localStorage.getItem('selectedDesserts') || 'No desserts selected';
+        
+        // Format activities list
+        const activitiesList = activities.length > 0 ? 
+          activities.map(a => `<div style="margin: 12px 0; padding: 10px 15px; background: rgba(37, 99, 235, 0.08); border-radius: 8px; border-left: 4px solid #2563eb; color: #1e40af; font-weight: 500;">• ${a}</div>`).join('') : 
+          '<div style="color: #999; font-style: italic;">No activities selected</div>';
+        
+        // Format food items for HTML
+        const foodList = foodItems !== 'No food selected' ? 
+          foodItems.split('\n').filter(f => f.trim()).map(f => `<div style="margin: 12px 0; padding: 10px 15px; background: rgba(234, 88, 12, 0.08); border-radius: 8px; border-left: 4px solid #ea580c; color: #c2410c; font-weight: 500;">• ${f.replace('▸ ', '')}</div>`).join('') :
+          '<div style="color: #999; font-style: italic;">No food selected</div>';
+        
+        // Format dessert items for HTML
+        const dessertList = dessertItems !== 'No desserts selected' ? 
+          dessertItems.split('\n').filter(d => d.trim()).map(d => `<div style="margin: 12px 0; padding: 10px 15px; background: rgba(147, 51, 234, 0.08); border-radius: 8px; border-left: 4px solid #9333ea; color: #7e22ce; font-weight: 500;">• ${d.replace('▸ ', '')}</div>`).join('') :
+          '<div style="color: #999; font-style: italic;">No desserts selected</div>';
+        
+        // Format the complete HTML message
+        // Remove photo section from email to avoid payload too large error
+        const fullMessage = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Georgia', 'Times New Roman', serif; background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%);">
+  <div style="max-width: 700px; margin: 40px auto; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 15px; overflow: hidden; box-shadow: 0 20px 60px rgba(219, 39, 119, 0.3), 0 0 0 1px rgba(219, 39, 119, 0.1); border: 8px solid #fff; position: relative;">
+      <div style="height: 8px; background: linear-gradient(90deg, #db2777 0%, #f472b6 25%, #fda4af 50%, #f472b6 75%, #db2777 100%);"></div>
+      <div style="background: linear-gradient(135deg, #fce7f3 0%, #fff 100%); padding: 15px; text-align: center; border-bottom: 2px dashed #fda4af;">
+        <div style="font-size: 30px; letter-spacing: 8px; color: #db2777;">❦ ❦ ❦</div>
+      </div>
+      <div style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); padding: 50px 40px; text-align: center; position: relative; border-bottom: 3px double #fda4af;">
+        <div style="position: absolute; top: 20px; left: 20px; font-size: 50px; opacity: 0.15; transform: rotate(-15deg);">🌹</div>
+        <div style="position: absolute; top: 20px; right: 20px; font-size: 50px; opacity: 0.15; transform: rotate(15deg);">🌹</div>
+        <div style="font-size: 16px; color: #be185d; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px; font-weight: 600;">You Are Invited</div>
+        <h1 style="margin: 0; color: #db2777; font-size: 38px; font-weight: 700; line-height: 1.3; font-family: 'Georgia', serif; text-shadow: 1px 1px 2px rgba(219, 39, 119, 0.1);">
+          A Romantic Valentine's<br>Date Evening
+        </h1>
+        <div style="margin-top: 20px; font-size: 18px; color: #be185d; font-style: italic; font-weight: 300;">
+          ❤️ Celebrating Our Love ❤️
+        </div>
+      </div>
+      <div style="padding: 45px 50px; background: #fffbfe;">
+        <div style="text-align: center; margin-bottom: 35px;">
+          <div style="display: inline-block; padding: 0 15px; font-size: 24px; color: #f472b6;">✿ ❀ ✿</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #fce7f3 0%, #fff 100%); border: 2px solid #fda4af; border-radius: 12px; padding: 30px; margin-bottom: 35px; text-align: center; box-shadow: inset 0 2px 8px rgba(244, 114, 182, 0.1);">
+          <div style="font-size: 18px; color: #be185d; font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">
+            ✦ When We Meet ✦
+          </div>
+          <table style="width: 100%; max-width: 400px; margin: 0 auto; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 12px; text-align: right; color: #9f1239; font-weight: 600; font-size: 15px; border-right: 2px solid #fda4af;">Date</td>
+              <td style="padding: 12px; text-align: left; color: #db2777; font-size: 17px; font-weight: 500; padding-left: 20px;">${dateInfo}</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; text-align: right; color: #9f1239; font-weight: 600; font-size: 15px; border-right: 2px solid #fda4af;">Time</td>
+              <td style="padding: 12px; text-align: left; color: #db2777; font-size: 17px; font-weight: 500; padding-left: 20px;">${timeInfo}</td>
+            </tr>
+          </table>
+        </div>
+        <div style="text-align: center; padding: 25px 30px; background: linear-gradient(135deg, #fff9f0 0%, #fff 100%); border-left: 4px solid #fbbf24; border-right: 4px solid #fbbf24; border-radius: 10px; margin-bottom: 35px; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.1);">
+          <div style="font-size: 16px; color: #d97706; font-weight: 600; margin-bottom: 12px; letter-spacing: 1px;">✨ A Special Note ✨</div>
+          <p style="margin: 0; color: #78716c; font-size: 16px; line-height: 1.8; font-style: italic; font-family: 'Georgia', serif;">
+            "${notes}"
+          </p>
+        </div>
+        ${loveLetter ? `
+        <!-- Love Letter Section -->
+        <div style="margin-bottom: 35px; padding: 30px; background: linear-gradient(135deg, #fef3f9 0%, #fff 100%); border: 2px solid #fda4af; border-radius: 12px; box-shadow: 0 4px 15px rgba(253, 164, 175, 0.15);">
+          <div style="text-align: center; font-size: 40px; margin-bottom: 15px;">💌</div>
+          <h3 style="margin: 0 0 20px; color: #db2777; font-size: 22px; text-align: center; font-weight: 600;">My Love Letter to You</h3>
+          <div style="padding: 20px; background: rgba(255,255,255,0.7); border-radius: 8px; color: #4a4a4a; font-size: 16px; line-height: 1.9; font-style: italic; font-family: 'Georgia', serif; white-space: pre-wrap;">
+            ${loveLetter}
+          </div>
+        </div>` : ''}
+        <div style="text-align: center; margin: 40px 0 30px; border-top: 2px solid #fda4af; border-bottom: 2px solid #fda4af; padding: 15px 0;">
+          <h2 style="margin: 0; color: #be185d; font-size: 24px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">
+            ♥ Our Date Itinerary ♥
+          </h2>
+        </div>
+        <div style="margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, #fff7ed 0%, #fff 100%); border-radius: 12px; border: 2px dashed #fb923c; box-shadow: 0 3px 12px rgba(251, 146, 60, 0.08);">
+          <h3 style="margin: 0 0 18px; color: #ea580c; font-size: 20px; text-align: center; font-weight: 600;">
+            🍽️ What We'll Eat
+          </h3>
+          <div style="font-size: 15px; line-height: 1.6;">
+            ${foodList}
+          </div>
+        </div>
+        <div style="margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, #faf5ff 0%, #fff 100%); border-radius: 12px; border: 2px dashed #c084fc; box-shadow: 0 3px 12px rgba(192, 132, 252, 0.08);">
+          <h3 style="margin: 0 0 18px; color: #9333ea; font-size: 20px; text-align: center; font-weight: 600;">
+            🍰 Dessert
+          </h3>
+          <div style="font-size: 15px; line-height: 1.6;">
+            ${dessertList}
+          </div>
+        </div>
+        <div style="margin-bottom: 25px; padding: 25px; background: linear-gradient(135deg, #f0f9ff 0%, #fff 100%); border-radius: 12px; border: 2px dashed #60a5fa; box-shadow: 0 3px 12px rgba(96, 165, 250, 0.08);">
+          <h3 style="margin: 0 0 18px; color: #2563eb; font-size: 20px; text-align: center; font-weight: 600;">
+            🎉 What We'll Do
+          </h3>
+          <div style="font-size: 15px; line-height: 1.6;">
+            ${activitiesList}
+          </div>
+        </div>
+      </div>
+      <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #fce7f3 0%, #fff 100%);">
+        <div style="font-size: 26px; color: #f472b6; letter-spacing: 10px;">❦ ✿ ❀ ✿ ❦</div>
+      </div>
+      <div style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); padding: 45px 40px; text-align: center; border-top: 3px double #fda4af;">
+        <p style="margin: 0 0 20px; color: #be185d; font-size: 19px; font-weight: 500; line-height: 1.6; font-family: 'Georgia', serif; font-style: italic;">
+          I can't wait to create these<br>beautiful memories with you! 🌹
+        </p>
+        <div style="margin-top: 30px; padding-top: 25px; border-top: 2px solid #fda4af;">
+          <p style="margin: 0 0 10px; color: #db2777; font-size: 16px; letter-spacing: 1px;">With All My Love,</p>
+          <p style="margin: 0; color: #db2777; font-size: 26px; font-weight: 700; font-family: 'Brush Script MT', cursive;">Your Valentine 💕</p>
+        </div>
+      </div>
+      <div style="height: 8px; background: linear-gradient(90deg, #db2777 0%, #f472b6 25%, #fda4af 50%, #f472b6 75%, #db2777 100%);"></div>
+    </div>
+    <div style="text-align: center; margin-top: 25px; color: #be185d; font-size: 13px; font-style: italic; opacity: 0.8;">
+      This invitation was made with love ❤️
+    </div>
+  </div>
+</body>
+</html>`;
+        
+        // Email template parameters - with HTML support
+        const templateParams = {
+          to_email: 'subhajitgupta99@gmail.com, kundunikita200@gmail.com',
+          to_name: 'My Love',
+          from_name: 'Your Valentine',
+          message: fullMessage
+        };
+        
+        // Send email using EmailJS
+        emailjs.send('service_1iq1mk3', 'template_gy3eydt', templateParams)
+          .then(function(response) {
+            console.log('Email sent successfully!', response.status, response.text);
+            alert('✅ Date plan sent successfully! 💕');
+            button.textContent = originalText;
+            button.disabled = false;
+            // Navigate to last page
+            setTimeout(() => {
+              location.href = 'lastpage.html';
+            }, 500);
+          }, function(error) {
+            console.error('Failed to send email:', error);
+            alert('❌ Failed to send email. Please try again or check your internet connection.');
+            button.textContent = originalText;
+            button.disabled = false;
+          });
+      }
+      
+      // Make images clickable and add visual feedback
+      function setupActivitySelection() {
+        document.querySelectorAll('.activity-item').forEach(item => {
+          const img = item.querySelector('img');
+          const checkbox = item.querySelector('input[type="checkbox"]');
+          const label = item.querySelector('label');
+          // Remove any previous listeners to avoid duplicates
+          img.onclick = null;
+          checkbox.onclick = null;
+          item.onclick = null;
+          if (label) label.onclick = null;
+          checkbox.onchange = null;
+          // Click on image toggles checkbox
+          img.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            checkbox.checked = !checkbox.checked;
+            updateSelection();
+          });
+          // Click on label toggles checkbox (for mobile accessibility)
+          if (label) {
+            label.addEventListener('click', function(e) {
+              if (e.target === checkbox) return;
+              e.preventDefault();
+              checkbox.checked = !checkbox.checked;
+              updateSelection();
+            });
+          }
+          // Click on item (but not checkbox, image, or label) toggles checkbox
+          item.addEventListener('click', function(e) {
+            if (e.target === checkbox || e.target === img || e.target === label) return;
+            checkbox.checked = !checkbox.checked;
+            updateSelection();
+          });
+          // Add visual feedback when checkbox changes
+          checkbox.addEventListener('change', updateSelection);
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupActivitySelection);
+      } else {
+        setupActivitySelection();
+      }
+      
+      function updateSelection() {
+        const counter = document.getElementById('activityCounter');
+        let count = 0;
+        
+        document.querySelectorAll('.activity-item').forEach(item => {
+          const checkbox = item.querySelector('input[type="checkbox"]');
+          if (checkbox.checked) {
+            item.classList.add('selected');
+            count++;
+          } else {
+            item.classList.remove('selected');
+          }
+        });
+        
+        counter.textContent = count === 0 ? '0 items selected' : count === 1 ? '1 item selected ♥' : `${count} items selected ♥`;
+      }
+    </script>
+    <script src="js/navigation.js"></script>
+    <div class="swipe-indicator">👈 Swipe to navigate 👉</div>
+  </body>
+</html>

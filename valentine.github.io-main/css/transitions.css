@@ -1,0 +1,211 @@
+/* Global Smooth Page Transitions */
+body {
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page Exit Animation */
+body.page-exit {
+  animation: fadeOut 0.4s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Image Hover Effects - Zoom on Hover */
+.food-item img,
+.dessert-item img,
+.activity-item img {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.food-item:hover img,
+.dessert-item:hover img,
+.activity-item:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 8px 25px rgba(255, 148, 148, 0.4);
+}
+
+/* Selection Animation - Heart Burst */
+@keyframes heartBurst {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.food-item.selected,
+.dessert-item.selected,
+.activity-item.selected {
+  animation: heartBurst 0.4s ease-out;
+  position: relative;
+}
+
+/* Sparkle Effect on Selection */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+.food-item.selected::after,
+.dessert-item.selected::after,
+.activity-item.selected::after {
+  content: '✨';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  animation: sparkle 0.8s ease-out;
+  pointer-events: none;
+}
+
+/* Button Pulse Effect on Hover */
+.button,
+.answerButton {
+  transition: all 0.3s ease;
+}
+
+.button:hover,
+.answerButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 148, 148, 0.5);
+}
+
+/* Touch-Friendly Mobile Buttons */
+@media (max-width: 768px) {
+  .button,
+  .answerButton {
+    min-height: 55px;
+    font-size: 18px;
+    padding: 15px 30px;
+    margin: 15px 10px;
+  }
+  
+  .food-item,
+  .dessert-item,
+  .activity-item {
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .time-btn,
+  .quick-date-btn {
+    min-height: 48px;
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading Indicator */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.loading-overlay.active {
+  display: flex;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #ffd4d4;
+  border-top: 4px solid #ff6b9d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.food-item img,
+.dessert-item img,
+.activity-item img {
+  object-fit: cover;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+/* Swipe Indicator */
+.swipe-indicator {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ff9494;
+  font-size: 14px;
+  opacity: 0.7;
+  animation: bounce 2s infinite;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .swipe-indicator {
+    display: block;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -10px);
+  }
+}

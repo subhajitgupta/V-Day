@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Selection</title>
+    <link rel="stylesheet" href="css/food.css" />
+    <link rel="stylesheet" href="css/transitions.css" />
+  </head>
+  <body>
+    <div class="header-container">
+      <div id="foodquestion">
+        <b>What Delicious Meal Shall We Enjoy Together? 💕</b>
+      </div>
+      <div class="selection-counter" id="foodCounter">0 items selected</div>
+    </div>
+
+    <div class="food-selection">
+      <div class="food-item">
+        <img src="food/bengalithali.jpeg" alt="Bengali thali" />
+        <label
+          ><input
+            type="checkbox"
+            name="food"
+            value="Bengali Thali"
+          />
+          Bengali Thali ♡</label
+        >
+      </div>
+      <div class="food-item">
+        <img src="food/sushi.jpeg" alt="sushi" />
+        <label
+          ><input type="checkbox" name="food" value="Sushi" /> Sushi ♡</label
+        >
+      </div>
+      <div class="food-item">
+        <img src="food/ramen.jpeg" alt="ramen" />
+        <label
+          ><input type="checkbox" name="food" value="Ramen" /> Ramen ♡</label
+        >
+      </div>
+      <div class="food-item">
+        <img src="food/szechuanrice.jpeg" alt="Szechuan rice" />
+        <label><input type="checkbox" name="food" value="Szechuan Rice" /> Szechuan Rice ♡</label>
+      </div>
+      <div class="food-item">
+        <img src="food/chickenstroganoff.jpeg" alt="chicken stroganoff" />
+        <label><input type="checkbox" name="food" value="Chicken Stroganoff" /> Chicken Stroganoff ♡</label>
+      </div>
+      <div class="food-item">
+        <img src="food/dumplings.jpeg" alt="dumplings" />
+        <label><input type="checkbox" name="food" value="Dumplings (Hargao)" /> Dumplings (Hargao) ♡</label>
+      </div>
+    </div>
+    <button class="button" onclick="saveAndContinue()">
+      Continue ♡
+    </button>
+
+    <script>
+      // Save selections and continue
+      function saveAndContinue() {
+        const selected = Array.from(document.querySelectorAll('input[name="food"]:checked'))
+          .map(cb => '▸ ' + cb.value);
+        localStorage.setItem('selectedFood', selected.length > 0 ? selected.join('\n') : 'No food selected');
+        location.href = 'dessert.html';
+      }
+      
+      // Make images clickable and add visual feedback
+      document.querySelectorAll('.food-item').forEach(item => {
+        const img = item.querySelector('img');
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        
+        // Click on image or item container toggles checkbox
+        img.addEventListener('click', function() {
+          checkbox.checked = !checkbox.checked;
+          updateSelection();
+        });
+        
+        // Add visual feedback when checkbox changes
+        checkbox.addEventListener('change', updateSelection);
+      });
+      
+      function updateSelection() {
+        const counter = document.getElementById('foodCounter');
+        let count = 0;
+        
+        document.querySelectorAll('.food-item').forEach(item => {
+          const checkbox = item.querySelector('input[type="checkbox"]');
+          if (checkbox.checked) {
+            item.classList.add('selected');
+            count++;
+          } else {
+            item.classList.remove('selected');
+          }
+        });
+        
+        counter.textContent = count === 0 ? '0 items selected' : count === 1 ? '1 item selected ♥' : `${count} items selected ♥`;
+      }
+    </script>
+    <script src="js/navigation.js"></script>
+    <div class="swipe-indicator">👈 Swipe to navigate 👉</div>
+  </body>
+</html>

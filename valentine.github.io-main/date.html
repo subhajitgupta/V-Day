@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Special Date 💕</title>
+    <link rel="stylesheet" href="css/date.css" />
+    <link rel="stylesheet" href="css/transitions.css" />
+  </head>
+  <body>
+    <div class="floating-hearts">
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+    </div>
+
+    <div class="container">
+      <div class="header-section">
+        <h1 class="pulse">When Are You Free, My Love? 💕</h1>
+        <p class="subtitle">Let's plan our perfect day together</p>
+        <div class="quote">"Every moment with you is a treasure ✨"</div>
+      </div>
+      
+      <div class="heart-decoration">♥ ♥ ♥</div>
+      
+      <form class="form-group" id="dateForm">
+        <label class="form-label">Pick Our Special Day Together ♡</label>
+        
+        <div class="quick-dates">
+          <button type="button" class="quick-date-btn" data-days="0">Today 💕</button>
+          <button type="button" class="quick-date-btn" data-days="1">Tomorrow 🌹</button>
+          <button type="button" class="quick-date-btn" data-days="7">Next Week ✨</button>
+          <button type="button" class="quick-date-btn" data-date="2026-02-14">Valentine's Day 💝</button>
+        </div>
+        
+        <div class="input-container">
+          <input type="date" id="dateInput" min="2026-02-07" required />
+        </div>
+        <div class="selected-date-display" id="selectedDateDisplay"></div>
+        
+        <label class="form-label time-label">What time works best? ♡</label>
+        <div class="time-options">
+          <button type="button" class="time-btn" data-time="12:00">Lunch 🍽️</button>
+          <button type="button" class="time-btn" data-time="15:00">Afternoon ☀️</button>
+          <button type="button" class="time-btn" data-time="18:00">Evening 🌆</button>
+          <button type="button" class="time-btn" data-time="20:00">Night 🌙</button>
+        </div>
+        
+        <div class="input-container">
+          <input type="time" id="timeInput" value="11:00" required />
+        </div>
+        
+        <div class="note-section">
+          <label class="form-label">Any special note? (Optional) 💌</label>
+          <textarea id="noteInput" placeholder="Tell me something sweet..."></textarea>
+        </div>
+        
+        <button class="button submit-btn" type="submit" formaction="loveletter.html">
+          Continue Planning Our Date ♡
+        </button>
+      </form>
+      
+      <div class="heart-decoration bottom">♥ ♥ ♥</div>
+    </div>
+
+    <script>
+      const dateInput = document.getElementById('dateInput');
+      const timeInput = document.getElementById('timeInput');
+      const dateForm = document.getElementById('dateForm');
+      const selectedDateDisplay = document.getElementById('selectedDateDisplay');
+      
+      // Quick date buttons
+      document.querySelectorAll('.quick-date-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          let dateString;
+          
+          // Check if it's a specific date or relative days
+          if (this.dataset.date) {
+            dateString = this.dataset.date;
+          } else {
+            const days = parseInt(this.dataset.days);
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            dateString = date.toISOString().split('T')[0];
+          }
+          
+          dateInput.value = dateString;
+          updateDateDisplay();
+          
+          // Visual feedback
+          document.querySelectorAll('.quick-date-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+      
+      // Time buttons
+      document.querySelectorAll('.time-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          timeInput.value = this.dataset.time;
+          
+          // Visual feedback
+          document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+      
+      // Update date display
+      function updateDateDisplay() {
+        if (dateInput.value) {
+          const date = new Date(dateInput.value + 'T00:00:00');
+          const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+          const dateStr = date.toLocaleDateString('en-US', options);
+          selectedDateDisplay.textContent = `Selected: ${dateStr} ♡`;
+          selectedDateDisplay.style.display = 'block';
+        }
+      }
+      
+      dateInput.addEventListener('change', updateDateDisplay);
+      
+      // Form validation
+      dateForm.addEventListener('submit', function(e) {
+        if (!dateInput.value) {
+          e.preventDefault();
+          alert('Please select a date for our special day! 💕');
+          return false;
+        }
+        
+        // Store selections in localStorage
+        localStorage.setItem('selectedDate', dateInput.value);
+        localStorage.setItem('selectedTime', timeInput.value);
+        localStorage.setItem('dateNote', document.getElementById('noteInput').value);
+      });
+      
+      // Initialize with Valentine's Day as default
+      if (!dateInput.value) {
+        dateInput.value = '2026-02-14';
+        updateDateDisplay();
+      }
+    </script>
+    <script src="js/navigation.js"></script>
+    <div class="swipe-indicator">👈 Swipe to navigate 👉</div>
+  </body>
+</html>
